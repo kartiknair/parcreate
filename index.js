@@ -240,12 +240,8 @@ function cleanup() {
   if (directorySpinner.isSpinning) directorySpinner.fail();
   if (packageSpinner.isSpinning) packageSpinner.fail();
   if (installSpinner.isSpinning) installSpinner.fail();
-  if (fs.existsSync(dir)) fs.rmdirSync(dir);
   process.exit();
 }
 
-process.on("exit", () => cleanup());
-
 process.on("SIGINT", () => cleanup());
-
 process.on("uncaughtException", () => cleanup());

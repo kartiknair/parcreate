@@ -1,0 +1,21 @@
+{
+  "name": "parcreate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Kartik Nair (https://kartikn.me)",
+  "license": "MIT",
+  "bin": {
+    "run": "bin/index.js"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "ora": "^4.0.3"
+  },
+  "devDependencies": {},
+  "description": "A dead simple react boilerplate bundled with parcel.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kartiknair/parcreate.git"
+  }
+}

@@ -15,8 +15,7 @@ const dir = process.argv[2];
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const initContent = {
-  html: `
-<!DOCTYPE html>
+  html: `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -29,16 +28,30 @@ const initContent = {
     </body>
 </html>
 `,
-  js: `
-import React from "react";
+  js: `import React from "react";
 import ReactDom from "react-dom";
+import "./index.css";
 
-const App = () => (<h1>Hello World</h1>)
+const App = () => <h1>Hello World</h1>;
 
 ReactDom.render(<App />, document.getElementById("root"));
   `,
-  gitignore: `
-# Logs
+  css: `* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+}
+`,
+  gitignore: `# Logs
 logs
 *.log
 npm-debug.log*
@@ -203,23 +216,22 @@ else {
     });
 
     result.on("close", code => {
-      if (!code) {
+      console.log("install finished with code: " + code);
+      if (code === 0) {
         const babelConfig = {
           presets: ["@babel/preset-react"]
         };
 
         fs.writeFileSync(
-          path.join(process.argv[1], dir, ".babelrc"),
+          path.join(dir, ".babelrc"),
           JSON.stringify(babelConfig)
         );
+        fs.writeFileSync(path.join(dir, ".gitignore"), initContent.gitignore);
 
         fs.mkdirSync(path.join(dir, "src"));
         fs.writeFileSync(path.join(dir, "src", "index.html"), initContent.html);
         fs.writeFileSync(path.join(dir, "src", "index.js"), initContent.js);
-        fs.writeFileSync(
-          path.join(dir, "src", ".gitignore"),
-          initContent.gitignore
-        );
+        fs.writeFileSync(path.join(dir, "src", "index.css"), initContent.css);
 
         installSpinner.succeed();
         console.log(chalk.white("Done installing successfully"));
@@ -230,18 +242,14 @@ else {
         console.log(chalk.blueBright("\nnpm start"));
         console.log(chalk.white("\nHave fun!"));
       } else {
+        console.log(
+          "Code was not number 0 rather it was: " +
+            code +
+            " with type of " +
+            typeof code
+        );
         installSpinner.fail();
       }
     });
   }
 }
-
-function cleanup() {
-  if (directorySpinner.isSpinning) directorySpinner.fail();
-  if (packageSpinner.isSpinning) packageSpinner.fail();
-  if (installSpinner.isSpinning) installSpinner.fail();
-  process.exit();
-}
-
-process.on("SIGINT", () => cleanup());
-process.on("uncaughtException", () => cleanup());

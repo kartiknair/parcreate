@@ -216,7 +216,6 @@ else {
     });
 
     result.on("close", code => {
-      console.log("install finished with code: " + code);
       if (code === 0) {
         const babelConfig = {
           presets: ["@babel/preset-react"]
@@ -238,8 +237,9 @@ else {
         console.log(
           chalk.white("\nYou can run the following commands to get started")
         );
-        console.log(chalk.blueBright("\ncd " + dir));
-        console.log(chalk.blueBright("\nnpm start"));
+
+        console.log(chalk.cyan("\ncd " + dir));
+        console.log(chalk.cyan("\nnpm start"));
         console.log(chalk.white("\nHave fun!"));
       } else {
         console.log(

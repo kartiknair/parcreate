@@ -2,7 +2,12 @@
   "name": "parcreate",
   "version": "1.0.0",
   "main": "index.js",
-  "keywords": [],
+  "keywords": [
+    "parcel",
+    "parcel-bundler",
+    "react",
+    "parcel with react"
+  ],
   "author": "Kartik Nair (https://kartikn.me)",
   "license": "MIT",
   "bin": {

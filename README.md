@@ -1,5 +1,7 @@
 # Parcreate
 
+![npm](https://img.shields.io/npm/v/parcreate) ![License](https://img.shields.io/npm/l/parcreate)
+
 Parcreate is a dead simple react boilerplate that uses parcel for bundling. I speak more about how you can set up parcel with react in [this blog post](https://blog.kartikn.me/parcel-react).
 
 ## Getting started

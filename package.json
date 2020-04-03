@@ -11,7 +11,7 @@
   "author": "Kartik Nair (https://kartikn.me)",
   "license": "MIT",
   "bin": {
-    "run": "bin/index.js"
+    "parcreate": "./index.js"
   },
   "dependencies": {
     "chalk": "^4.0.0",

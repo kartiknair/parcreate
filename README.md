@@ -2,19 +2,40 @@
 
 ![npm](https://img.shields.io/npm/v/parcreate) ![License](https://img.shields.io/npm/l/parcreate)
 
-Parcreate is a dead simple react boilerplate that uses parcel for bundling. I speak more about how you can set up parcel with react in [this blog post](https://blog.kartikn.me/parcel-react).
+Super simple project bootstrapping with [Parcel Bundler](https://parceljs.org).
 
-## Getting started
+```shell
+npx parcreate example
 
-There's two ways to use parcreate the new & recommended way (because you will alwaays be up to date) is with `npx`, assuming you have node.js & npm>5.2.0 installed you can run the following command:
+# Or with a template:
 
-```bash
-npx parcreate my-apps-name
+npx parcreate example --template tailwind
+
+
+# If you don't have npm>5.2.0
+#    this method is not reccommended as you have to manually
+#    make sure you're using the latest version everytime
+
+npm i -g parcreate
+parcreate example --template react
 ```
 
-If you would like to do it the old fashioned way then you can run the following commands:
+### Current list of templates:
 
-```bash
-npm i -g parcreate
-parcreate my-apps-name
+-   `basic`
+-   `tailwind`
+-   `react`
+
+### Help text:
+
+```shell
+$ parcreate <dir> [options]
+
+Options
+    -t, --template    Choose a template for your app (defaults to basic)
+
+Examples
+    $ parcreate my-app
+    $ parcreate my-react-app --template react
+    $ parcreate . --template tailwind
 ```

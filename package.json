@@ -6,7 +6,10 @@
         "parcel",
         "parcel-bundler",
         "react",
-        "parcel with react"
+        "parcel with react",
+        "tailwind",
+        "parcel with tailwind",
+        "boilerplate"
     ],
     "author": "Kartik Nair (https://kartikn.me)",
     "license": "MIT",
@@ -21,7 +24,7 @@
         "tar": "^6.0.2"
     },
     "devDependencies": {},
-    "description": "A dead simple react boilerplate bundled with parcel.",
+    "description": "Super simple project bootstrapping with Parcel Bundler.",
     "repository": {
         "type": "git",
         "url": "https://github.com/kartiknair/parcreate.git"

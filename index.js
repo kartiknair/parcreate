@@ -91,9 +91,9 @@ async function downloadGitRepo({ template, directory }) {
             )
             console.log('\n    Get started by changing directories:')
             console.log(chalk.cyanBright(`\n        cd ${directory}`))
-            console.log(chalk.gray('\n\n    Start the dev server:'))
+            console.log('\n\n    Start the dev server:')
             console.log(chalk.cyanBright(`\n        npm run dev`))
-            console.log('\n\n    Build production-ready static files:')
+            console.log('\n\n    Build production-ready files:')
             console.log(chalk.cyanBright(`\n        npm run build`))
         }
     })

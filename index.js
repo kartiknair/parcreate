@@ -2,20 +2,17 @@
 
 const got = require('got')
 const tar = require('tar')
-const sade = require('sade')
 const ora = require('ora')
+const sade = require('sade')
 const chalk = require('chalk')
-const { spawn } = require('child_process')
+const spawn = require('cross-spawn')
 const { join } = require('path')
 const { Stream } = require('stream')
+const { execSync } = require('child_process')
 const { promisify } = require('util')
-const { readdirSync, mkdirSync, existsSync } = require('fs')
+const { mkdirSync, existsSync } = require('fs')
 
-const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-
-const templates = readdirSync(join(__dirname, './templates'))
-
-sade('parcreate [dir]', true)
+sade('parcreate <dir>', true)
     .version('2.0.0')
     .describe('Bootstrap an app bundled with Parcel.js')
     .example('my-app')
@@ -25,29 +22,33 @@ sade('parcreate [dir]', true)
         '-t, --template',
         'Choose a template for your app (defaults to basic)'
     )
+    .option('-n, --use-npm', 'Use npm instead of yarn')
     .action((dir, opts) => {
-        downloadGitRepo({ template: opts.template || 'basic', directory: dir })
+        downloadGitRepo({
+            template: opts.template || 'basic',
+            directory: dir,
+            useNpm: !!opts['use-npm'],
+        })
     })
     .parse(process.argv)
 
-/* This code was taken from the `create-next-app` project:
+/* This code was adapted from the `create-next-app` project:
         https://github.com/vercel/next.js/blob/canary/packages/create-next-app/
 */
 
-async function downloadGitRepo({ template, directory }) {
+async function downloadGitRepo({ template, directory, useNpm }) {
+    const templatesResponse = await got(
+        'https://api.github.com/repos/kartiknair/parcreate/contents/templates',
+        { responseType: 'json' }
+    )
+    const templates = templatesResponse.body.map((temp) => temp.name)
+
+    const packageManager = useNpm ? 'npm' : yarnInstalled() ? 'yarn' : 'npm'
+
     const pipeline = promisify(Stream.pipeline)
 
     if (!templates.includes(template)) {
         console.log(`\n${chalk.red(template)} is not an available template`)
-        process.exit(1)
-    }
-
-    if (!directory) {
-        console.log(
-            `\n${chalk.red(
-                'Please specify a directory'
-            )}\n\nSee examples with the ${chalk.cyan('`--help`')} command`
-        )
         process.exit(1)
     }
 
@@ -64,7 +65,9 @@ async function downloadGitRepo({ template, directory }) {
 
     if (!existsSync(directory)) mkdirSync(join(process.cwd(), directory))
 
-    const downloadSpinner = ora('Downloading template files').start()
+    const downloadSpinner = ora(
+        `Downloading template files for \`${chalk.cyan(template)}\``
+    ).start()
 
     await pipeline(
         got.stream(
@@ -75,16 +78,22 @@ async function downloadGitRepo({ template, directory }) {
         ])
     )
 
-    downloadSpinner.succeed('Downloaded files')
+    downloadSpinner.succeed(
+        `Downloaded files for template \`${chalk.cyan(template)}\``
+    )
 
-    console.log(`\nInstalling dependancies with ${chalk.cyan('`npm`')}`)
+    console.log(
+        `\nInstalling dependancies with ${chalk.cyan(
+            '`' + packageManager + '`'
+        )}`
+    )
 
-    const npmInstall = spawn(npm, ['install'], {
+    const installation = spawn(packageManager, ['install'], {
         cwd: join(process.cwd(), directory),
         stdio: 'inherit',
     })
 
-    npmInstall.on('close', (code) => {
+    installation.on('close', (code) => {
         if (code === 0) {
             console.log(
                 '\nProject was succesfully bootstrapped. Here are the commands you have available:'
@@ -92,9 +101,30 @@ async function downloadGitRepo({ template, directory }) {
             console.log('\n    Get started by changing directories:')
             console.log(chalk.cyanBright(`\n        cd ${directory}`))
             console.log('\n\n    Start the dev server:')
-            console.log(chalk.cyanBright(`\n        npm run dev`))
+            console.log(
+                chalk.cyanBright(
+                    `\n        ${
+                        packageManager === 'npm' ? 'npm run' : 'yarn'
+                    } dev`
+                )
+            )
             console.log('\n\n    Build production-ready files:')
-            console.log(chalk.cyanBright(`\n        npm run build`))
+            console.log(
+                chalk.cyanBright(
+                    `\n        ${
+                        packageManager === 'npm' ? 'npm run' : 'yarn'
+                    } build`
+                )
+            )
         }
     })
+}
+
+function yarnInstalled() {
+    try {
+        execSync('yarnpkg --version', { stdio: 'ignore' })
+        return true
+    } catch (e) {
+        return false
+    }
 }

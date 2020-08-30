@@ -117,3 +117,6 @@ dist
 # package-lock because it's not worth the merge conflicts in this scenario
 
 package-lock.json
+
+# Directory I use to try the script out while deving
+testing

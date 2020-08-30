@@ -66,7 +66,7 @@ async function downloadGitRepo({ template, directory, useNpm }) {
     if (!existsSync(directory)) mkdirSync(join(process.cwd(), directory))
 
     const downloadSpinner = ora(
-        `Downloading template files for \`${chalk.cyan(template)}\``
+        `Downloading template files for ${chalk.greenBright(template)}`
     ).start()
 
     await pipeline(
@@ -79,13 +79,11 @@ async function downloadGitRepo({ template, directory, useNpm }) {
     )
 
     downloadSpinner.succeed(
-        `Downloaded files for template \`${chalk.cyan(template)}\``
+        `Downloaded files for template ${chalk.greenBright(template)}`
     )
 
     console.log(
-        `\nInstalling dependancies with ${chalk.cyan(
-            '`' + packageManager + '`'
-        )}`
+        `\nInstalling dependancies with \`${chalk.cyan(packageManager)}\``
     )
 
     const installation = spawn(packageManager, ['install'], {
@@ -113,7 +111,7 @@ async function downloadGitRepo({ template, directory, useNpm }) {
                 chalk.cyanBright(
                     `\n        ${
                         packageManager === 'npm' ? 'npm run' : 'yarn'
-                    } build`
+                    } build\n`
                 )
             )
         }
